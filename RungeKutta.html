@@ -1,0 +1,208 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <title>Runge Kutta 4 Orden</title>
+    <!-- Latest compiled and minified CSS -->
+
+    <link rel="shortcut icon" href="Images/favicon.ico">
+    <link rel="stylesheet" href="Contents/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="Contents/Site2.css" type="text/css">
+    <link href="Contents/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <script src="Scripts/jquery-3.4.1.min.js"></script>
+    <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
+    <script src="Scripts/angular.min.js" type="text/javascript"></script>
+    <script src="Scripts/ui-bootstrap-tpls-2.5.0.min.js" type="text/javascript"></script>
+    <script src="Scripts/popper.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="Scripts/RungeKutta.js"></script>
+
+    <script type="text/javascript">
+        var rungeKutta;
+
+        $(document).ready(function () {
+
+            $('#btnCalcular').click(function () {
+                $('#tabla-runge-kutta').show();
+                $('#grafico-runge-kutta').hide();
+
+                if (
+                    $.isNumeric($('#inputK').val()) &&
+                    $.isNumeric($('#inputH').val()) &&
+                    $.isNumeric($('#inputPo').val()) &&
+                    $.isNumeric($('#inputCT').val()) &&
+                    $.isNumeric($('#inputCP').val()) &&
+                    $.isNumeric($('#inputIT').val())
+                )
+                    generarRugenKutta(
+                        $('#inputK').val(),
+                        $('#inputH').val(),
+                        0,
+                        $('#inputPo').val(),
+                        $('#inputCT').val(),
+                        $('#inputCP').val(),
+                        $('#inputIT').val()
+                    );
+                else
+                    alert("Todos los campos deben ser numericos");
+
+            });
+
+        });
+
+        function generarRugenKutta(k, h, To, Po, ct, cp, it) {
+            var tFinal = 0;
+            $('#tabla-runge-kutta tbody').empty();
+            rungeKutta = new RungeKutta(k, h, To, Po, ct, cp);
+            do {
+                if (tFinal == 0) {
+                    var aux = false;
+                    var contador = 0;
+                    var salir_rk = false;
+                    var corte_rk = false;
+                }
+                //calculamos los Ki
+                rungeKutta.calcularKi();
+                //calculo el Pi+1
+                rungeKutta.calcularProxP();
+                //completamos la rabla con los datos obtenidos
+
+                $('#tabla-runge-kutta tbody').append(
+                    $('<tr>').append(
+                        $('<td>').text(rungeKutta.getT()),
+                        $('<td>').text(rungeKutta.getP()),
+                        $('<td>').text(rungeKutta.getK1()),
+                        $('<td>').text(rungeKutta.getK2()),
+                        $('<td>').text(rungeKutta.getK3()),
+                        $('<td>').text(rungeKutta.getK4()),
+                        $('<td>').text(rungeKutta.getProxP())
+                    )
+                );
+
+                tFinal = rungeKutta.getT();
+
+                var proxT = rungeKutta.getT() + rungeKutta.getH();
+                var proxP = rungeKutta.getProxP();
+
+                rungeKutta.setT(proxT);
+                rungeKutta.setP(proxP);
+
+                if (aux === false) {
+                    aux = true;
+                    corte_rk = proxP.toFixed(9);
+                }
+                if (corte_rk === proxP.toFixed(9)) {
+                    contador = contador + 1;
+                    if (contador == it) // 15 iteraciones
+                    {
+                        salir_rk = true;
+                    }
+                }
+                else {
+                    corte_rk = proxP.toFixed(9);
+                    contador = 0;
+                }
+            } while (salir_rk === false)
+        }
+
+    </script>
+</head>
+<body style="background-color: lightgray">    
+    
+        <div class="container">
+            <h2>Parámetros:</h2>
+            <br />
+            <div class="card">
+				<form name="FormReg">
+					<div class="card-body">
+				
+                    <div class="row {{ (FormReg.p.$invalid && (FormReg.p.$touched || FormReg.$submitted)) ? 'has-error' : '' }}">
+                        <div class="container">
+                            <div class="row" style="margin: 10px">
+                                <div class="col-6">
+                                    <h4>Ecuación Diferencial</h4>
+                                </div>
+                                <div class="col-6" style="border:solid;">
+                                    <h4 class="row justify-content-center"> <b> dT/dt= <span style="color: red">ct</span> T + <span style="color: red">cp</span> / P  </b></h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <hr />
+                            </div>
+                            <div class="row" style="margin: 10px">
+                                <div class="col-md-4">
+                                    <h4>Param</h4>
+                                    <div class="col-12">
+                                        <!--campo P -->
+                                        <label class="control-label">Valor <b>P</b>: </label>
+                                        <input id="inputK" type="number" max="45" min="30" step="15" value="30" name="p" class="form-control" required ng-model="p" maxlength="4" ng-pattern="/^[3-4][0,5]+$/" />
+                                        <span class="help-inline" ng-show="FormReg.p.$error.pattern ">Solamente 30 o 45.</span>
+                                    </div>
+                                    <div class="col-12">
+                                        <!--campo SALTOS H -->
+                                        <label class="control-label">Valor <b>H</b>: </label>
+                                        <input id="inputH" type="number" max="0.5" min="0.1" step="0.1" value="0.5" name="h" class="form-control" required ng-model="h" minlength="3" maxlength="3" ng-pattern="/^[0]['.'][1-5]+$/" />
+                                        <span class="help-inline" ng-show="FormReg.h.$error.pattern"> valor permitido entre 0.1 y 0.5.</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>Ecuación</h4>
+                                    <div class="col-12">
+                                        <!--campo -->
+                                        <label class="control-label">Constante <span style="color: red"><b>ct</b></span> (-0.5): </label>
+                                        <input id="inputCT" type="number" max="99" min="-99" step="0.1" value="-0.5" name="constanteTemp" class="form-control" required ng-model="constanteTemp" maxlength="4" />
+                                        <span class="help-inline" ng-show="FormReg.constanteTemp.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                    </div>
+                                    <div class="col-12">
+                                        <!--campo -->
+                                        <label class="control-label">Constante <span style="color: red"><b>cp</b></span> (900): </label>
+                                        <input id="inputCP" type="number" max="9999" min="0" step="1" value="900" name="constanteMayor" class="form-control" required ng-model="constanteMayor" maxlength="4" ng-pattern="/^[0-9]+$/" />
+                                        <span class="help-inline" ng-show="FormReg.constanteMayor.$error.pattern ">Numerico positivo.</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>Horno</h4>
+                                    <div class="col-12">
+                                        <!--campo -->
+                                        <label class="control-label">Temperatura Inicio:</label>
+                                        <input id="inputPo" type="number" max="99" min="0" step="1" value="5" name="tempInicioHorno" class="form-control" required ng-model="tempInicioHorno" maxlength="4" ng-pattern="/^[0-9]+$/" />
+                                        <span class="help-inline" ng-show="FormReg.tempInicioHorno.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                    </div>
+                                    <div class="col-12">
+                                        <!--campo -->
+                                        <label class="control-label">Tiempo Cocción (Temp MAX): </label>
+                                        <input id="inputIT" type="number" max="99" min="0" step="1" value="15" name="hornoTiempoCoccion" class="form-control" required ng-model="hornoTiempoCoccion" maxlength="4" ng-pattern="/^[0-9]+$/" />
+                                        <span class="help-inline" ng-show="FormReg.hornoTiempoCoccion.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </form>
+				<br />
+                <hr />
+                <!-- Botones -->
+                <div style="margin: 10px">
+                    <button class="btn btn-info" id="btnCalcular" >Inicio</button>
+                    <a class="btn btn-info" href="Simulacion.html" role="button">&nbsp;Volver </a>
+                </div>
+            </div>
+        </div>
+    
+    <table id="tabla-runge-kutta" class="table table-primary" style="display:none;">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Yi</th>
+                <th>k1</th>
+                <th>k2</th>
+                <th>k3</th>
+                <th>k4</th>
+                <th>Yi+1</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+</body>
+</html>

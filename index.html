@@ -1,0 +1,79 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <meta name="viewport" content="width=device-width" />
+    <title>TP7 Simulación</title>
+    <link rel="shortcut icon" href="Images/favicon.ico">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="Contents/bootstrap.css">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="Scripts/jquery-3.4.1.min.js " type="text/javascript"></script>
+    <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
+    <script src="Scripts/angular.min.js" type="text/javascript"></script>
+    <script src="Scripts/ui-bootstrap-tpls-2.5.0.min.js" type="text/javascript"></script>
+    <script src="Scripts/popper.min.js" type="text/javascript"></script>
+    <script src="Scripts/App.js"></script>
+
+</head>
+<body ng-app='myApp' ng-controller='InicioCtrl' style="background-color:lightgray">
+
+    <div class="jumbotron" style="background-color:lightgray">
+
+        <br><br><br>
+        <div class="card">
+            <div class="card-header">
+                <h2 class="row justify-content-center"> SIMULACIÓN - Trabajo Práctico Nº7 </h2>
+                <br />
+            </div>
+            <div class="card-body">
+                <h4>Enunciado:</h4>
+                <p>
+                    A una panadería llegan clientes con una distribución exponencial negativa de media 3 minutos.
+                    Esta panadería cuenta con dos empleados, cualquiera de los cuales demora entre 0,5 y 1,5 minutos (distribución uniforme) en atender a un cliente,
+                    independientemente de cuántas cosas compre el cliente (compran entre 1 y 3 productos).
+                    La panadería posee un horno que genera productos una vez que los mismos están cocinados.
+                    El horno se enciende cada 45 minutos o cuando la panadería se queda sin stock de productos.
+                    La cocción de los productos finaliza cuando el horno permanece 15 minutos en temperatura máxima.
+                    La tasa de cambio de la temperatura del horno está representada por la siguiente ecuación:
+                </p>
+                <br>
+                <h2 class="row justify-content-center"> dT/dt= -0.5 T + 900 / P  </h2>
+                <br>
+                <p>
+                    Donde la constante P representa la cantidad de productos que se están cocinando. Inicialmente, el
+                    orno siempre tiene 5 grados.
+                    La cantidad de productos a cocinar depende del stock de la panadería al momento de encender el
+                    horno. Si hay productos para vender, se cargan 30 unidades para cocinar. En cambio, si no hay
+                    stock, se cargan 45 unidades.
+                    Cuando un cliente llega, si no hay productos para vender en los próximos 5 minutos, se retira.
+                    Si estaba esperando su turno, y se terminan los productos, se retira. Si le toca su turno, y quedan
+                    menos productos de la cantidad que pensaba comprar, compra lo que queda.
+                </p>
+                <div>
+                    <p>
+                        -  Se desea saber el porcentaje de clientes que se pierden por no haber existencia de productos.
+                    </p>
+                </div>
+
+                <div class="row justify-content-center">
+                    <br>
+                    <p> <a class="btn btn-lg btn-info" href="Simulacion.html" role="button">Iniciar</a></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h4 style="margin:10px"> Santoro Exequiel</h4>
+    <h4 style="margin:10px"> 4k4 - 2022</h4>
+</body>
+</html>

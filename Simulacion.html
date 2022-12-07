@@ -1,0 +1,346 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Final Simulacion</title>
+    <link rel="shortcut icon" href="Images/favicon.ico">
+    <link rel="stylesheet" href="Contents/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="Contents/Site2.css" type="text/css">
+    <link href="Contents/jquery.dataTables.min.css" rel="stylesheet" />
+    
+    <script src="Scripts/jquery-3.4.1.min.js " type="text/javascript"></script>
+    <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
+    <script src="Scripts/angular.min.js" type="text/javascript"></script>
+    <script src="Scripts/ui-bootstrap-tpls-2.5.0.min.js" type="text/javascript"></script>
+    <script src="Scripts/popper.min.js" type="text/javascript"></script>
+    <script src="Scripts/App.js"></script>
+</head>
+
+<body ng-app='myApp' ng-controller='SimulacionTP7' style="background-color: lightgray">
+
+    <form name="FormReg">
+        <div class="container">
+            <h2>Parámetros:</h2>
+            <button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#demoGeneral">General</button>
+            <div id="demoGeneral" class="collapse">
+                <br />
+                <div class="card">
+                    <div class="card-body">
+                        <div class="{{ (FormReg.Horas.$invalid && (FormReg.Horas.$touched || FormReg.$submitted)) ? 'has-error' : '' }}
+                                    {{ (FormReg.hs_ini.$invalid && (FormReg.hs_ini.$touched || FormReg.$submitted)) ? 'has-error' : '' }}
+                                    {{ (FormReg.hs_fin.$invalid && (FormReg.hs_fin.$touched || FormReg.$submitted)) ? 'has-error' : '' }}
+                                    {{ (FormReg.Stock_inicial.$invalid && (FormReg.Stock_inicial.$touched || FormReg.$submitted)) ? 'has-error' : '' }}">
+                            <div class="container">
+                                <div class="row" style="margin: 10px">
+                                    <div class="col-md-4">
+                                        <div class="col-12">
+                                            <!--campo Horas a Simular -->
+                                            <label class="control-label">Cantidad de Horas:</label>
+                                            <input type="number" id="Horas" max="9999" min="1" step="1" value="10" name="Horas" class="form-control" required ng-model="Horas" ng-pattern="/^[0-9]+$/" />
+                                            <span class="help-inline" ng-show="FormReg.Horas.$error.pattern ">1 Horas Min.</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="col-12">
+                                            <label class="control-label">Visualización - Hora Inicio:</label>
+                                            <input type="number" id="hs_ini" max="9999" min="0" step="1" value="10" name="hs_ini" class="form-control" required ng-model="hs_ini" ng-pattern="/^[0-9]+$/" />
+                                            <span class="help-inline" ng-show="FormReg.hs_ini.$error.pattern ">0 Horas Min.</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="control-label">Visualización Hora Fin:</label>
+                                            <input type="number" id="hs_fin" max="9999" min="0" step="1" value="10" name="hs_fin" class="form-control" required ng-model="hs_fin" ng-pattern="/^[0-9]+$/" />
+                                            <span class="help-inline" ng-show="FormReg.hs_fin.$error.pattern ">0 Horas Min.</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="col-12">
+                                            <!--campo a Stock Inicial-->
+                                            <label class="control-label">Stock Inicial: </label>
+                                            <input type="number" max="99" min="0" step="1" name="Stock_inicial" class="form-control" required ng-model="Stock_inicial" maxlength="2" ng-pattern="/^[0-9][0-9]$/" />
+                                            <span class="help-inline" ng-show="FormReg.Stock_inicial.$error.pattern"> Numerico positivo Entre 0 y 99</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#demoClientesEmpleados">Clientes-Empleados</button>
+            <div id="demoClientesEmpleados" class="collapse">
+                <br />
+                <div class="card">
+                    <div class="card-body">
+                        <div class="{{ (FormReg.Media.$invalid && (FormReg.Media.$touched || FormReg.$submitted)) ? 'has-error' : '' }}
+                                    {{ (FormReg.EmpMin.$invalid && (FormReg.EmpMin.$touched || FormReg.$submitted)) ? 'has-error' : '' }}
+                                    {{ (FormReg.EmpMax.$invalid && (FormReg.EmpMax.$touched || FormReg.$submitted)) ? 'has-error' : '' }}
+                                    {{ (FormReg.EmpMin2.$invalid && (FormReg.EmpMin2.$touched || FormReg.$submitted)) ? 'has-error' : '' }}
+                                    {{ (FormReg.EmpMax2.$invalid && (FormReg.EmpMax2.$touched || FormReg.$submitted)) ? 'has-error' : '' }}">
+                            <div class="container">
+                                <div class="row" style="margin: 10px">
+                                    <div class="col-md-4">
+                                        <div class="col-12">
+                                            <!--campo CLIENTES -->
+                                            <h4>Cliente</h4>
+                                            <label class="control-label">Llegadas de Clientes(exp neg): </label>
+                                            <input type="number" max="99" min="-100" step="1" name="Media" class="form-control" required ng-model="Media" maxlength="4" ng-pattern="/^[0-9]+$/" />
+                                            <span class="help-inline" ng-show="FormReg.Media.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>Empleado 1</h4>
+                                        <div class="col-12">
+                                            <!--campo EMP 1 MIN -->
+                                            <label class="control-label">Atención (Uniforme) </label>
+                                            <label class="control-label"> - Minimo:</label>
+                                            <input type="number" max="99" min="0" step="0.1" name="EmpMin" class="form-control" required ng-model="EmpMin" maxlength="4" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" />
+                                            <span class="help-inline" ng-show="FormReg.EmpMin.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <!--campo EMP 1 MAX -->
+                                            <label class="control-label">Atención (Uniforme) </label>
+                                            <label class="control-label"> - Maximo: </label>
+                                            <input type="number" max="99" min="0" step="0.1" name="EmpMax" class="form-control" required ng-model="EmpMax" maxlength="4" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" />
+                                            <span class="help-inline" ng-show="FormReg.EmpMax.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>Empleado 2</h4>
+                                        <div class="col-12">
+                                            <!--campo EMP 2 MIN -->
+                                            <label class="control-label">Atención (Uniforme) </label>
+                                            <label class="control-label"> - Minimo:</label>
+                                            <input type="number" max="99" min="0" step="0.1" name="EmpMin2" class="form-control" required ng-model="EmpMin2" maxlength="4" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" />
+                                            <span class="help-inline" ng-show="FormReg.EmpMin2.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <!--campo EMP 2 MAX -->
+                                            <label class="control-label">Atención (Uniforme) </label>
+                                            <label class="control-label"> - Maximo: </label>
+                                            <input type="number" max="99" min="0" step="0.1" name="EmpMax2" class="form-control" required ng-model="EmpMax2" maxlength="4" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" />
+                                            <span class="help-inline" ng-show="FormReg.EmpMax2.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#demoRk">Ruggen Kutta</button>
+            <div id="demoRk" class="collapse">
+                <br />
+                <div class="card">
+                    <div class="card-body">
+                        <div class="
+                                    {{ (FormReg.tempInicioHorno.$invalid && (FormReg.tempInicioHorno.$touched || FormReg.$submitted)) ? 'has-error' : '' }}
+                                    {{ (FormReg.constanteTemp.$invalid && (FormReg.constanteTemp.$touched || FormReg.$submitted)) ? 'has-error' : '' }}
+                                    {{ (FormReg.constanteMayor.$invalid && (FormReg.constanteMayor.$touched || FormReg.$submitted)) ? 'has-error' : '' }}
+                                    {{ (FormReg.hornoTiempoCoccion.$invalid && (FormReg.hornoTiempoCoccion.$touched || FormReg.$submitted)) ? 'has-error' : '' }}
+                                    {{ (FormReg.hornoTiempoEnsendido.$invalid && (FormReg.hornoTiempoEnsendido.$touched || FormReg.$submitted)) ? 'has-error' : '' }}">
+                            <div class="container">
+                                <div class="row" style="margin: 10px">
+                                    <div class="col-6">
+                                        <h4>Ecuación Diferencial</h4>
+                                    </div>
+                                    <div class="col-6" style="border:solid;">
+                                        <h4 class="row justify-content-center"> <b> dT/dt= <span style="color: red">ct</span> T + <span style="color: red">cp</span> / P  </b></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                   <hr />
+                                </div>
+                                <div class="row" style="margin: 10px">
+                                    <div class="col-md-4">
+                                        <div class="col-12">
+                                            <!--campo SALTOS H -->
+                                            <label class="control-label">Valor <b>H</b>: </label>
+                                            <input type="number" max="5" min="0" step="0.1" name="saltosH" class="form-control" required ng-model="saltosH" maxlength="4" />
+                                            <span class="help-inline" ng-show="FormReg.saltosH.$error.pattern ">Numerico positivo.</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>Ecuación</h4>
+                                        <div class="col-12">
+                                            <!--campo -->
+                                            <label class="control-label">Constante <span style="color: red"><b>ct</b></span> (-0.5): </label>
+                                            <input type="number" max="99" min="-99" step="0.1" name="constanteTemp" class="form-control" required ng-model="constanteTemp" maxlength="4" />
+                                            <span class="help-inline" ng-show="FormReg.constanteTemp.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <!--campo -->
+                                            <label class="control-label">Constante <span style="color: red"><b>cp</b></span> (900): </label>
+                                            <input type="number" max="9999" min="0" step="1" name="constanteMayor" class="form-control" required ng-model="constanteMayor" maxlength="4" ng-pattern="/^[0-9]+$/" />
+                                            <span class="help-inline" ng-show="FormReg.constanteMayor.$error.pattern ">Numerico positivo.</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>Horno</h4>
+                                        <div class="col-12">
+                                            <!--campo -->
+                                            <label class="control-label">Temperatura Inicio:</label>
+                                            <input type="number" max="99" min="0" step="1" name="tempInicioHorno" class="form-control" required ng-model="tempInicioHorno" maxlength="4" ng-pattern="/^[0-9]+$/" />
+                                            <span class="help-inline" ng-show="FormReg.tempInicioHorno.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <!--campo -->
+                                            <label class="control-label">Timpo de espera de coción: </label>
+                                            <input type="number" max="99" min="0" step="1" name="hornoTiempoCoccion" class="form-control" required ng-model="hornoTiempoCoccion" maxlength="4" ng-pattern="/^[0-9]+$/" />
+                                            <span class="help-inline" ng-show="FormReg.hornoTiempoCoccion.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <!--campo -->
+                                            <label class="control-label">Tiempo de ensendido: </label>
+                                            <input type="number" max="99" min="0" step="0.1" name="hornoTiempoEnsendido" class="form-control" required ng-model="hornoTiempoEnsendido" maxlength="4" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" />
+                                            <span class="help-inline" ng-show="FormReg.hornoTiempoEnsendido.$error.pattern ">Numerico positivo hasta 2 Digitos.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <hr />
+            <!-- Botones -->
+            <div style="margin: 10px">
+
+                <button class="btn btn-info" ng-disabled="FormReg.Stock_inicial.$error.pattern || FormReg.Horas.$error.pattern || FormReg.Eventos.$error.pattern " ng-click="Iniciar()"> &nbsp;Iniciar</button>
+
+                <button class="btn btn-info" ng-click="Limpiar()">&nbsp; Limpiar</button>
+
+                <button class="btn btn-info" ng-click="Resumen()"> &nbsp;Informacion</button>
+
+                <a class="btn btn-info" href="index.html" role="button">&nbsp;Volver </a>
+  
+
+                <a class="btn btn-danger" href="RungeKutta.html" role="button">&nbsp;Runge Kutta </a>
+            </div>
+        </div>
+            
+
+
+                    <!--
+            <div class="card" style="margin: 70px;">
+                <div class="card-header">
+                    <h2 class="row justify-content-center"> Parametros: </h2>
+                    <br />
+                </div>
+                <div class="card-body">
+                    <div class="row {{ (FormReg.p.$invalid && (FormReg.p.$touched || FormReg.$submitted)) ? 'has-error' : '' }}{{ (FormReg.h.$invalid && (FormReg.h.$touched || FormReg.$submitted)) ? 'has-error' : '' }}{{ (FormReg.Evento_nro.$invalid && (FormReg.Evento_nro.$touched || FormReg.$submitted)) ? 'has-error' : '' }}">
+
+                        <label class="control-label ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;: </label>
+                        <div class="col-sm-1">
+                            <input id="inputK" type="number" max="45" min="30" step="15" value="30" name="p" class="form-control" required ng-model="p" maxlength="4" ng-pattern="/^[3-4][0,5]+$/" />
+                            <span class="help-inline" ng-show="FormReg.p.$error.pattern ">Solamente 30 o 45.</span>
+                        </div>
+                        <label class="control-label">H: </label>
+                        <div class="col-sm-1">
+                            <input type="number" id="inputH" name="h" max="0.5" min="0.1" step="0.1" value="0.5" class="form-control" required ng-model="h" minlength="3" maxlength="3" ng-pattern="/^[0]['.'][1-5]+$/" />
+                            <span class="help-inline" ng-show="FormReg.h.$error.pattern"> valor permitido entre 0.1 y 0.5.</span>
+                        </div>
+                        <label class="control-label ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Temperatura Inicial&nbsp;: </label>
+                        <div class="col-sm-1">
+                            <input type="number" name="temp" id="inputPo" max="200" min="0" step="1" value="5" class="form-control" required ng-model="h" minlength="3" maxlength="3" ng-pattern="/^[0]['.'][1-5]+$/" />
+                            <span class="help-inline" ng-show="FormReg.temp.$error.pattern"> valor permitido entre 5 y 200.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            -->
+
+</form>
+    <br><br>
+    <!-- RESUMEN!!! -->
+    <div id="Css_Resumen" class="d-flex justify-content-center" ng-show="AccionABMC == 'R'">
+
+        <p>
+            <label>&starf;&nbsp;&nbsp;Total de Llegadas de CLientes&nbsp;&nbsp;:&nbsp;{{Contador_ll_Clientes}}</label>
+            <br>
+            <label>&starf;&nbsp;&nbsp;Proporción de Clientes sin Atencion&nbsp;&nbsp;:&nbsp;{{Proporcion  | number:1}} &percnt; Contabilizando&nbsp;&nbsp;{{No_Atendidos}} Clientes </label>
+            <br>
+            <label>&starf;&nbsp;&nbsp;Proporción de Clientes Atendidos&nbsp;&nbsp;:&nbsp;{{Proporcion_Atendidos | number:1}} &percnt; Contabilizando&nbsp;&nbsp;{{Atendidos}} Clientes  </label>
+            <br>
+            <label>&starf;&nbsp;&nbsp;Clientes que esperaron más  de 5 Minutos&nbsp;sin Stock&nbsp;:&nbsp;{{Esperas}}  </label>
+            <br>
+        </p>
+    </div>
+
+
+    <div class="table-responsive table" ng-show="AccionABMC == 'L'" id="TablayPaginador ">
+        <table id="tbAbm" class="table table-bordered table">
+            <tr>
+                <th class="text-center">&nbsp; # &nbsp;</th>
+                <th class="text-center">&nbsp;&nbsp;&nbsp;Evento&nbsp;&nbsp;&nbsp;</th>
+
+                <th class="text-center">&nbsp;&nbsp;&nbsp;Reloj&nbsp;&nbsp;&nbsp;</th>
+
+                <th class="text-center"> Reloj (60) </th>
+
+
+                <th class="text-center"> RND_LL_CLN&nbsp;</th>
+                <th class="text-center"> T_entre_LL_Cliente&nbsp;</th>
+                <th class="text-center"> Prox_LL_CLN&nbsp;</th>
+                <th class="text-center"> Rnd_Cant_Prod&nbsp;</th>
+                <th class="text-center"> Cantidad_Prod&nbsp;</th>
+
+
+                <th class="text-center"> EMP1 P_Estado_1&nbsp;</th>
+                <th class="text-center"> EMP1 P_RND_T_Atencion_1&nbsp;</th>
+                <th class="text-center"> EMP1 P_T_Atencion_1&nbsp;</th>
+                <th class="text-center"> EMP1 P_Hora_Fin_Atencion_1&nbsp;</th>
+
+                <th class="text-center"> EMP2 P_Estado_2&nbsp;</th>
+                <th class="text-center"> EMP2 P_RND_T_Atencion_2&nbsp;</th>
+                <th class="text-center"> EMP2 P_T_Atencion_2&nbsp;</th>
+                <th class="text-center"> EMP2 P_Hora_Fin_Atencion_2&nbsp;</th>
+
+                <th class="text-center"> Cola&nbsp;</th>
+                <th class="text-center"> Ac_CLNs_Atendidos&nbsp;</th>
+                <th class="text-center"> Ac_CLNs_SinAtencion&nbsp;</th>
+                <th class="text-center"> Stock_Actual&nbsp;</th>
+                <th class="text-center"> Estado_Horno&nbsp;</th>
+                <th class="text-center"> Hora_Inicio_Coccion&nbsp;</th>
+                <th class="text-center"> Tiempo_Coccion&nbsp;</th>
+                <th class="text-center"> Hora_Fin_Coccion&nbsp;</th>
+                <th class="text-center"> Proxima_Hora_Coccion_Programada&nbsp;</th>
+            </tr>
+
+            <tr ng-repeat="item in items" class="text-center" ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
+                <td>{{item.nro}}</td>
+                <td>{{item.Evento}}</td>
+                <td>{{item.Reloj | number:3}}</td>
+
+                <td>{{item.Reloj_Hora | number:3}}</td>
+                <td>{{item.RND_LL_Cliente| number:3}}</td>
+                <td>{{item.T_entre_LL_Cliente| number:3}}</td>
+                <td>{{item.Prox_LL_Cliente| number:3}}</td>
+                <td>{{item.Rnd_Cant_Prod| number:3}}</td>
+                <td>Prod&nbsp;:&nbsp;{{item.Cantidad_Prod}}</td>
+                <td>{{item.P_Estado_1}}</td>
+                <td>{{item.P_RND_T_Atencion_1| number:3}}</td>
+                <td>{{item.P_T_Atencion_1| number:3}}</td>
+                <td>{{ (item.P_Estado_1 !== "Libre") ? (item.P_Hora_Fin_Atencion_1| number:3) : "-"}}</td>
+                <td>{{item.P_Estado_2}}</td>
+                <td>{{item.P_RND_T_Atencion_2| number:3}}</td>
+                <td>{{item.P_T_Atencion_2| number:3}}</td>
+                <td>{{ (item.P_Estado_2 !== "Libre") ? (item.P_Hora_Fin_Atencion_2| number:3) : "-"}}</td>
+                <td>Cola&nbsp;:&nbsp;{{item.Cola}}</td>
+                <td>Atendidos&nbsp;:&nbsp;{{item.Ac_Clientes_Atendidos}}</td>
+                <td>Sin Atencion&nbsp;:&nbsp;{{item.Ac_Clientes_SinAtencion}}</td>
+                <td>Stock&nbsp;:&nbsp;{{item.Stock_Actual}}</td>
+                <td>{{item.Estado_Horno}}</td>
+                <td>{{item.Hora_Inicio_Coccion| number:3}}</td>
+                <td>{{item.Tiempo_Coccion| number:3}}</td>
+                <td>{{item.Hora_Fin_Coccion| number:3}}</td>
+                <td>{{item.Proxima_Hora_Coccion_Programada| number:3}}</td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>
